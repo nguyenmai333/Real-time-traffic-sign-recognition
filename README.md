@@ -1,3 +1,3 @@
 # Real-time-traffic-sign-recognition
 #TEST 
-# Enh tâm đẹp zai
+# Enh tâm đẹp zai, ngốc ngếch
