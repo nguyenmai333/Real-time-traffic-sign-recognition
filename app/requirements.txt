@@ -1,0 +1,7 @@
+--init--
+npm install expo
+npm install @react-navigation/native-stack expo-checkbox @react-navigation/native expo-camera
+npm install expo-location react-native-maps --save
+
+--support web--
+npx expo install react-dom react-native-web @expo/webpack-config

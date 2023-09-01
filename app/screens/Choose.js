@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useFonts } from 'expo-font';
 
-const Choose = () => {
+const Choose = ({navigation}) => {
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [vehicleType, setVehicleType] = useState(null);
   const [connectionMethod, setConnectionMethod] = useState(null);
   const [fontsLoaded] = useFonts({
@@ -22,10 +23,16 @@ const Choose = () => {
     if (vehicleType && connectionMethod) {
       console.log('Loại phương tiện:', vehicleType);
       console.log('Phương thức kết nối:', connectionMethod);
+      navigation.navigate("CameraScreen");
     } else {
-      console.log('Vui lòng chọn loại phương tiện và phương thức kết nối.');
+      setShowErrorMessage(true);
+      console.log("Lỗi sai phương thức");
+      setTimeout(() => {
+        setShowErrorMessage(false);
+      }, 3000); 
     }
   };
+  
 
   if (!fontsLoaded) {
     return null;
@@ -38,18 +45,23 @@ const Choose = () => {
       <TouchableOpacity
         style={[
           styles.optionButton,
-          vehicleType === 'xeGanMay' && styles.selectedOptionButton,
+          vehicleType === 'Moto' ? styles.selectedOptionButton : null,
         ]}
-        onPress={() => handleVehicleTypeSelect('xeGanMay')}
+        onPress={() =>
+          handleVehicleTypeSelect(vehicleType === 'Moto' ? null : 'Moto')
+        }
       >
         <Text style={styles.optionText}>Xe gắn máy</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={[
           styles.optionButton,
-          vehicleType === 'xeOto' && styles.selectedOptionButton,
+          vehicleType === 'Oto' ? styles.selectedOptionButton : null,
         ]}
-        onPress={() => handleVehicleTypeSelect('xeOto')}
+        onPress={() =>
+          handleVehicleTypeSelect(vehicleType === 'Oto' ? null : 'Oto')
+        }
       >
         <Text style={styles.optionText}>Xe ô tô</Text>
       </TouchableOpacity>
@@ -58,25 +70,41 @@ const Choose = () => {
       <TouchableOpacity
         style={[
           styles.optionButton,
-          connectionMethod === 'cameraDienThoai' && styles.selectedOptionButton,
+          connectionMethod === 'DienThoai' ? styles.selectedOptionButton : null,
         ]}
-        onPress={() => handleConnectionMethodSelect('cameraDienThoai')}
+        onPress={() =>
+          handleConnectionMethodSelect(
+            connectionMethod === 'DienThoai' ? null : 'DienThoai'
+          )
+        }
       >
         <Text style={styles.optionText}>Camera điện thoại</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.optionButton,
-          connectionMethod === 'cameraHanTrinh' && styles.selectedOptionButton,
+          connectionMethod === 'HanhTrinh' ? styles.selectedOptionButton : null,
         ]}
-        onPress={() => handleConnectionMethodSelect('cameraHanTrinh')}
+        onPress={() =>
+          handleConnectionMethodSelect(
+            connectionMethod === 'HanhTrinh' ? null : 'HanhTrinh'
+          )
+        }
       >
         <Text style={styles.optionText}>Camera hành trình</Text>
       </TouchableOpacity>
 
+
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
+      <View style={styles.errorMessageContainer}>
+        {showErrorMessage && (
+          <Text style={styles.errorMessage}>
+            Vui lòng chọn loại phương tiện và phương thức kết nối.
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
@@ -85,7 +113,7 @@ const styles = StyleSheet.create({
   titleCennter: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 30,
     color: '#333',
     alignSelf: 'flex-start',
     marginLeft: 40,
@@ -100,7 +128,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginTop: 20,
+    marginBottom: 20,
     color: '#333',
     fontFamily: 'RobotoSlab-Regular',
   },
@@ -128,15 +157,29 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: '#D8F2DD',
     paddingVertical: 12,
-    paddingHorizontal: 30,
+    paddingHorizontal: 70,
     borderRadius: 5,
-    marginTop: 30,
+    marginTop: 50,
   }, 
   submitButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000',
     fontFamily: 'RobotoSlab-Regular',
+  },
+  errorMessageContainer: {
+    position: 'absolute', // Đặt vị trí tuyệt đối
+    bottom: 0, // Đặt dưới cùng màn hình
+    width: '0', // Rộng bằng 100% màn hình
+    backgroundColor: 'rgba(255, 0, 0, 0.8)', // Màu đỏ với độ trong suốt 80%
+    paddingVertical: 10, // Khoảng cách dọc
+    alignItems: 'center', // Canh giữa theo chiều ngang
+  },
+  errorMessage: {
+    color: 'white', // Màu trắng cho chữ
+    fontSize: 16,
+    fontFamily: 'RobotoSlab-Regular',
+    textAlign: 'center', // Căn lề giữa
   },
 });
 
